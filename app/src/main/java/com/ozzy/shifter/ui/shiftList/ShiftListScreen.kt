@@ -1,14 +1,13 @@
 package com.ozzy.shifter.ui.shiftList
 
+import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -16,29 +15,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ozzy.shifter.R
-import com.ozzy.shifter.model.Job
-import com.ozzy.shifter.model.Price
 import com.ozzy.shifter.model.Shift
-
 
 @Composable
 fun ShiftList() {
+
     Scaffold(
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            val context = LocalContext.current
+
+            ExtendedFloatingActionButton(
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
+                        contentDescription = null
+                    )
+                },
+                text = {
+                    Text(text = stringResource(R.string.filters))
+                },
+                onClick = {
+                    Toast.makeText(context, "FilterClicked", Toast.LENGTH_SHORT).show()
+                }
+            )
+        },
         content = {
             ShiftListContent(paddingValues = it)
         },
         bottomBar = {
-            BottomAppBar {
-                Text("BottomAppBar")
-            }
+            ShiftListBottomBar()
         }
     )
 }
@@ -153,15 +167,55 @@ fun JobImage(
     }
 }
 
-@Preview
 @Composable
-fun PreviewScreen() {
-    ShiftItem(
-        shift = Shift(
-            earningsPerHour = Price(12f, "EUR"),
-            job = Job(category = Job.Category(name = "Test")),
-            endsAt = "2022-06-12T20:00:00+02:00",
-            startsAt = "2022-06-13T05:00:00+02:00"
-        )
+fun ShiftListBottomBar() {
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(18.dp)
+    ) {
+        OutlinedButton(
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colorResource(id = R.color.teal_700),
+                contentColor = colorResource(id = R.color.teal_700),
+            ),
+            shape = RoundedCornerShape(6.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(12.dp, 0.dp, 12.dp, 0.dp),
+            onClick = {
+                Toast.makeText(context, "Subscribe Clicked", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            BottomBarButtonText(text = stringResource(R.string.subscribe))
+        }
+        OutlinedButton(
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colorResource(id = R.color.white),
+                contentColor = colorResource(id = R.color.white),
+            ),
+            border = BorderStroke(1.dp, colorResource(id = R.color.black)),
+            shape = RoundedCornerShape(6.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(12.dp, 0.dp, 12.dp, 0.dp),
+            onClick = {
+                Toast.makeText(context, "Login Clicked", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            BottomBarButtonText(text = stringResource(R.string.login))
+        }
+    }
+}
+
+@Composable
+fun BottomBarButtonText(text: String) {
+    Text(
+        modifier = Modifier.padding(8.dp),
+        text = text,
+        color = colorResource(id = R.color.black),
+        fontWeight = FontWeight.Bold
     )
 }
