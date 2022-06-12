@@ -3,4 +3,7 @@
     <string name="login">Login</string>
     <string name="subscribe">Subscribe</string>
     <string name="filters">Filters</string>
+    <string name="default_error_message">Something went wrong</string>
+    <string name="not_found_error_message">Not found</string>
+    <string name="empty_list_message">Nothing found</string>
 </resources>

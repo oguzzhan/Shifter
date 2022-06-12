@@ -21,12 +21,16 @@ class ShiftListViewModel @Inject constructor(
 
     val shiftList = mutableStateListOf<Shift>()
 
-    var shiftListErrorMessage: String by mutableStateOf("")
+    var shiftListError: ShifterResult.Error<*>? by mutableStateOf(null)
         private set
+
+    var isLoading: Boolean by mutableStateOf(false)
 
     private val shiftListFilterHelper = ShiftListFilterHelper()
 
     fun fetchShiftList() {
+        shiftListError = null
+
         viewModelScope.launch {
             shiftListFilterHelper.setFilterForToday()
 
@@ -34,12 +38,14 @@ class ShiftListViewModel @Inject constructor(
                 when (result) {
                     is ShifterResult.ShifterResponse -> {
                         shiftList.addAll(result.response.listResponse)
+                        isLoading = false
                     }
                     is ShifterResult.Loading -> {
-                        // Show Spinner
+                        isLoading = true
                     }
                     is ShifterResult.Error -> {
-                        shiftListErrorMessage = result.errorMessage
+                        shiftListError = result
+                        isLoading = false
                     }
                 }
             }

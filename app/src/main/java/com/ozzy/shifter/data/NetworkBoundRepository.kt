@@ -26,10 +26,12 @@ abstract class NetworkBoundRepository<RESULT> {
             emit(result)
 
         } else if (apiResponse.errorBody() != null) {
-            emit(ShifterResult.error(apiResponse.errorBody().toString()))
+            emit(
+                ShifterResult.errorCode(apiResponse.code()),
+            )
         }
     }.catch { e ->
-        emit(ShifterResult.error(e.localizedMessage ?: "User friendly error"))
+        emit(ShifterResult.defaultError())
     }
 
     @MainThread

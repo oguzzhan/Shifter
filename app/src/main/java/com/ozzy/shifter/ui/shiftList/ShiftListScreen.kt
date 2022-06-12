@@ -25,6 +25,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ozzy.shifter.R
 import com.ozzy.shifter.model.Shift
+import com.ozzy.shifter.ui.EmptyScreenDisplay
+import com.ozzy.shifter.ui.ErrorDisplay
+import com.ozzy.shifter.ui.Loader
 
 @Composable
 fun ShiftList() {
@@ -72,29 +75,37 @@ fun ShiftListContent(
         it.getStartDate()
     }
 
-    if (viewModel.shiftListErrorMessage.isEmpty()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(paddingValues),
-        ) {
-            groupedItems.forEach { (date, itemList) ->
-                stickyHeader {
-                    ListHeader(text = date)
-                }
-
-                items(
-                    items = itemList,
-                    key = {
-                        it.id ?: 0
+    if (viewModel.isLoading) {
+        Loader()
+    } else if (viewModel.shiftListError == null) {
+        if (viewModel.shiftList.isEmpty()) {
+            EmptyScreenDisplay()
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(paddingValues),
+            ) {
+                groupedItems.forEach { (date, itemList) ->
+                    stickyHeader {
+                        ListHeader(text = date)
                     }
-                ) { contact ->
-                    ShiftItem(contact)
+
+                    items(
+                        items = itemList,
+                        key = {
+                            it.id ?: 0
+                        }
+                    ) { contact ->
+                        ShiftItem(contact)
+                    }
                 }
             }
         }
     } else {
-        Text(text = viewModel.shiftListErrorMessage)
+        ErrorDisplay(
+            viewModel.shiftListError
+        )
     }
 }
 
