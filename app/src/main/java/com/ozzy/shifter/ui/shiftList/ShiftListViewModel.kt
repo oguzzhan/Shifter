@@ -19,9 +19,7 @@ class ShiftListViewModel @Inject constructor(
     private val repository: ShifterRepository
 ) : ViewModel() {
 
-    private val _shiftList = mutableStateListOf<Shift>()
-    val shiftList: List<Shift>
-        get() = _shiftList
+    val shiftList = mutableStateListOf<Shift>()
 
     var shiftListErrorMessage: String by mutableStateOf("")
         private set
@@ -35,7 +33,7 @@ class ShiftListViewModel @Inject constructor(
             repository.fetchShiftList(shiftListFilterHelper.filterMap).collect { result ->
                 when (result) {
                     is ShifterResult.ShifterResponse -> {
-                        _shiftList.addAll(result.response.listResponse)
+                        shiftList.addAll(result.response.listResponse)
                     }
                     is ShifterResult.Loading -> {
                         // Show Spinner
