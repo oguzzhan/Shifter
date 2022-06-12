@@ -3,6 +3,7 @@ package com.ozzy.shifter.ui.shiftList
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -79,7 +80,7 @@ fun ShiftListContent(
         ) {
             groupedItems.forEach { (date, itemList) ->
                 stickyHeader {
-                    Text(date ?: "")
+                    ListHeader(text = date)
                 }
 
                 items(
@@ -218,4 +219,21 @@ fun BottomBarButtonText(text: String) {
         color = colorResource(id = R.color.black),
         fontWeight = FontWeight.Bold
     )
+}
+
+@Composable
+fun ListHeader(text: String?) {
+    Box(
+        modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.white))
+            .padding(16.dp)
+    ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = text ?: "",
+            color = colorResource(id = R.color.black)
+        )
+    }
 }
