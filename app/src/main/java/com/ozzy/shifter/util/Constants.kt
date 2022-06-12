@@ -1,4 +1,4 @@
-package com.ozzy.util
+package com.ozzy.shifter.util
 
 class Constants {
     object Network {

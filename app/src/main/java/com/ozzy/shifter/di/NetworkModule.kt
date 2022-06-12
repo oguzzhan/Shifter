@@ -4,7 +4,7 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.ozzy.shifter.data.ShifterService
-import com.ozzy.util.Constants
+import com.ozzy.shifter.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

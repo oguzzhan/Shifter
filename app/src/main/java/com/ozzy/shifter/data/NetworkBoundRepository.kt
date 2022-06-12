@@ -1,6 +1,5 @@
 package com.ozzy.shifter.data
 
-import android.util.Log
 import androidx.annotation.MainThread
 import com.ozzy.shifter.model.ShifterResult
 import kotlinx.coroutines.flow.catch
@@ -16,22 +15,21 @@ abstract class NetworkBoundRepository<RESULT> {
 
         val apiResponse = fetchFromRemote()
         val remotePosts = apiResponse.body()
+        val responseBody = apiResponse.body()
 
         if (apiResponse.isSuccessful
-            && apiResponse.body() != null
+            && responseBody != null
             && remotePosts != null
         ) {
-            val result = ShifterResult.success(apiResponse.body())
+            val result = ShifterResult.success(responseBody)
             result.response
             emit(result)
 
         } else if (apiResponse.errorBody() != null) {
-            Log.d("Error", apiResponse.errorBody().toString())
-            emit(ShifterResult.serviceError(apiResponse.errorBody().toString()))
+            emit(ShifterResult.error(apiResponse.errorBody().toString()))
         }
     }.catch { e ->
-        Log.d("Internal Error", e.localizedMessage ?: "")
-        emit(ShifterResult.internalError(e.localizedMessage ?: "Error"))
+        emit(ShifterResult.error(e.localizedMessage ?: "User friendly error"))
     }
 
     @MainThread
