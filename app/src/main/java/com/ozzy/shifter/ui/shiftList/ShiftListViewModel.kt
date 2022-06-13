@@ -18,7 +18,6 @@ import javax.inject.Inject
 class ShiftListViewModel @Inject constructor(
     private val repository: ShifterRepository
 ) : ViewModel() {
-
     val shiftList = mutableStateListOf<Shift>()
 
     var shiftListError: ShifterResult.Error<*>? by mutableStateOf(null)
@@ -28,7 +27,7 @@ class ShiftListViewModel @Inject constructor(
 
     private val shiftListFilterHelper = ShiftListFilterHelper()
 
-    fun fetchShiftList() {
+    suspend fun fetchShiftList() {
         shiftListError = null
 
         viewModelScope.launch {
@@ -36,7 +35,7 @@ class ShiftListViewModel @Inject constructor(
 
             repository.fetchShiftList(shiftListFilterHelper.filterMap).collect { result ->
                 when (result) {
-                    is ShifterResult.ShifterResponse -> {
+                    is ShifterResult.Response -> {
                         shiftList.addAll(result.response.listResponse)
                         isLoading = false
                     }
